@@ -12,10 +12,36 @@ const AuthForm = () => {
     bio: ''
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Implement authentication logic
-    console.log('Form submitted:', formData);
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          sessionId
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Registration failed');
+      }
+
+      const data = await response.json();
+      console.log('Registration successful:', data);
+      
+      // Handle successful registration
+      if (step === 2) {
+        // If on social media connection step, complete the registration
+        window.location.href = '/dashboard'; // Redirect to dashboard or appropriate page
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      alert('Registration failed. Please try again.');
+    }
   };
 
   const handleChange = (e) => {
@@ -25,9 +51,24 @@ const AuthForm = () => {
     });
   };
 
+  const [sessionId] = useState(() => crypto.randomUUID());
+
   const socialLogin = (platform) => {
-    // TODO: Implement social login
-    console.log(`Logging in with ${platform}`);
+    try {
+      console.log(`Logging in with ${platform}`);
+      if (platform === 'YouTube') {
+        // Add state parameter to track the auth flow
+        const state = btoa(JSON.stringify({ sessionId, isRegistration: !isLogin }));
+        window.location.href = `http://localhost:5000/api/social/youtube/login?sessionId=${sessionId}&state=${state}`;
+      } else if (platform === 'Instagram') {
+        window.location.href = `http://localhost:5000/api/social/instagram/login?sessionId=${sessionId}`;
+      } else {
+        console.warn(`Social login for ${platform} not implemented yet.`);
+      }
+    } catch (error) {
+      console.error(`${platform} login error:`, error);
+      alert(`${platform} login failed. Please try again.`);
+    }
   };
 
   const nextStep = () => {

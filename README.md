@@ -98,30 +98,62 @@ This will start both frontend and backend servers concurrently.
 
 The Social Media API will provide endpoints for retrieving and managing social media data (posts, captions, likes, engagement stats, etc.) for integration with the Reflections module.
 
-#### Base URL
-`/api/social`
+**Base URL:** `/api/social`
 
 #### Endpoints
 
 - **GET /api/social/posts**
-  - Description: Retrieve a list of social media posts.
-  - Response Example:
+  - Description: Retrieve a list of social media posts (e.g., YouTube videos, Instagram posts) from the user's connected accounts.
+  - Authentication: Required (User must be logged in and have connected accounts).
+  - Response (Example):
     ```json
-    [
-      {
-        "id": "123",
-        "platform": "instagram",
-        "caption": "Excited for the new launch!",
-        "mediaUrl": "https://...",
-        "likes": 150,
-        "comments": 12,
-        "timestamp": "2024-06-01T12:00:00Z",
-        "engagement": {
-          "views": 1000,
-          "shares": 10
+    {
+      "posts": [
+        {
+          "platform": "youtube",
+          "id": "videoId123",
+          "title": "My Latest Video",
+          "description": "Description of the video...",
+          "url": "https://youtube.com/watch?v=videoId123",
+          "thumbnail": "https://img.youtube.com/vi/videoId123/0.jpg",
+          "publishedAt": "2023-10-27T10:00:00Z",
+          "stats": { "views": 1000, "likes": 100, "comments": 10 }
+        },
+        {
+          "platform": "instagram",
+          "id": "instaPostId456",
+          "caption": "A cool photo #awesome",
+          "media_type": "IMAGE",
+          "media_url": "https://instagram.com/p/instaPostId456/media?size=l",
+          "permalink": "https://instagram.com/p/instaPostId456/",
+          "timestamp": "2023-10-26T15:30:00Z",
+          "stats": { "likes": 50, "comments": 5 }
         }
-      }
-    ]
+        // ... more posts
+      ]
+    }
+    ```
+
+- **GET /api/social/liked-content**
+  - Description: Retrieve a list of content (e.g., YouTube videos) that the user has liked across connected social platforms.
+  - Authentication: Required.
+  - Note: Instagram API limitations may prevent fetching liked posts.
+  - Response (Example):
+    ```json
+    {
+      "likedContent": [
+        {
+          "platform": "youtube",
+          "id": "likedVideoId789",
+          "title": "An Interesting Video I Liked",
+          "channelTitle": "Creator Channel",
+          "url": "https://youtube.com/watch?v=likedVideoId789",
+          "thumbnail": "https://img.youtube.com/vi/likedVideoId789/0.jpg",
+          "likedAt": "2023-10-25T12:00:00Z" // Note: YouTube API might not provide exact like time
+        }
+        // ... more liked content
+      ]
+    }
     ```
 
 - **GET /api/social/posts/:id**
