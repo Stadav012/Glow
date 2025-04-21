@@ -3,11 +3,10 @@ import './Dashboard.css';
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
-  // Update state to hold separate content types
+  // Update state to hold standardized content types
   const [content, setContent] = useState({
-    likedVideos: [],
-    playlists: [],
-    uploadedVideos: [],
+    posts: [], // User's uploaded videos
+    likedContent: [], // User's liked videos
     instagram: [] // Keep instagram if needed
   });
   const [contentErrors, setContentErrors] = useState({
@@ -38,9 +37,8 @@ const Dashboard = () => {
 
         // Reset content and errors before fetching
         setContent({
-          likedVideos: [],
-          playlists: [],
-          uploadedVideos: [],
+          posts: [],
+          likedContent: [],
           instagram: []
         });
         setContentErrors({ youtube: null, instagram: null });
@@ -55,18 +53,17 @@ const Dashboard = () => {
               const youtubeData = await youtubeRes.json();
               setContent(prev => ({
                 ...prev,
-                likedVideos: youtubeData.likedVideos || [],
-                playlists: youtubeData.playlists || [],
-                uploadedVideos: youtubeData.uploadedVideos || []
+                posts: youtubeData.posts || [],
+                likedContent: youtubeData.likedContent || []
               }));
-              // Store potential errors from the backend response
-              const ytErrors = [
-                youtubeData.likedVideosError,
-                youtubeData.playlistsError,
-                youtubeData.uploadedVideosError
-              ].filter(Boolean).join(' ');
-              if (ytErrors) {
-                setContentErrors(prev => ({ ...prev, youtube: ytErrors }));
+              // Store potential errors from the backend response's errors object
+              if (youtubeData.errors) {
+                const ytErrors = Object.entries(youtubeData.errors)
+                                     .map(([key, value]) => `${key}: ${value}`)
+                                     .join('; ');
+                 if (ytErrors) {
+                    setContentErrors(prev => ({ ...prev, youtube: ytErrors }));
+                 }
               }
             } else {
               const errorData = await youtubeRes.json();
@@ -111,7 +108,7 @@ const Dashboard = () => {
   if (!user) return null;
 
   // Helper to check if any YouTube content exists
-  const hasYoutubeContent = content.likedVideos.length > 0 || content.playlists.length > 0 || content.uploadedVideos.length > 0;
+  const hasYoutubeContent = content.posts.length > 0 || content.likedContent.length > 0;
   const hasInstagramContent = content.instagram.length > 0;
   const isYoutubeConnected = !!user.socialAccounts?.youtube?.accessToken;
   const isInstagramConnected = !!user.socialAccounts?.instagram?.accessToken; // Assuming accessToken exists for IG too
@@ -132,56 +129,38 @@ const Dashboard = () => {
         {/* Display YouTube Fetch Errors */}
         {contentErrors.youtube && <p className="connection-status error-message">YouTube Error: {contentErrors.youtube}</p>}
 
-        {/* YouTube Liked Videos */} 
-        {content.likedVideos.length > 0 && (
+        {/* YouTube Liked Content */} 
+        {content.likedContent.length > 0 && (
           <div className="content-grid youtube-content">
-            <h3>Liked Videos</h3>
+            <h3>Liked Content</h3>
             <div className="grid">
-              {content.likedVideos.map(video => (
-                <div key={video.id} className="content-card youtube-card">
-                  <a href={`https://www.youtube.com/watch?v=${video.id}`} target="_blank" rel="noopener noreferrer">
-                    <img src={video.thumbnail} alt={video.title} />
-                    <h4>{video.title}</h4>
+              {content.likedContent.map(item => (
+                <div key={item.id} className="content-card youtube-card">
+                  <a href={item.url} target="_blank" rel="noopener noreferrer">
+                    {item.thumbnail && <img src={item.thumbnail} alt={item.title} />}
+                    <h4>{item.title}</h4>
                   </a>
-                  <p className="video-details">{video.channelTitle}</p>
-                  {/* Add more details if needed, e.g., view count */} 
+                  <p className="video-details">{item.channelTitle}</p>
+                  {/* Add more details if needed, e.g., likedAt (placeholder) */} 
                 </div>
               ))}
             </div>
           </div>
         )}
 
-        {/* YouTube Playlists */} 
-        {content.playlists.length > 0 && (
+        {/* User Posts (Uploads) */} 
+        {content.posts.length > 0 && (
           <div className="content-grid youtube-content">
-            <h3>Your Playlists</h3>
+            <h3>Your Posts</h3>
             <div className="grid">
-              {content.playlists.map(playlist => (
-                <div key={playlist.id} className="content-card youtube-card">
-                   <a href={`https://www.youtube.com/playlist?list=${playlist.id}`} target="_blank" rel="noopener noreferrer">
-                    <img src={playlist.thumbnail} alt={playlist.title} />
-                    <h4>{playlist.title}</h4>
-                  </a>
-                  <p className="video-details">{playlist.itemCount} videos</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* YouTube Uploaded Videos */} 
-        {content.uploadedVideos.length > 0 && (
-          <div className="content-grid youtube-content">
-            <h3>Your Uploads</h3>
-            <div className="grid">
-              {content.uploadedVideos.map(video => (
-                <div key={video.id} className="content-card youtube-card">
-                  <a href={`https://www.youtube.com/watch?v=${video.id}`} target="_blank" rel="noopener noreferrer">
-                    <img src={video.thumbnail} alt={video.title} />
-                    <h4>{video.title}</h4>
+              {content.posts.map(post => (
+                <div key={post.id} className="content-card youtube-card">
+                  <a href={post.url} target="_blank" rel="noopener noreferrer">
+                    {post.thumbnail && <img src={post.thumbnail} alt={post.title} />}
+                    <h4>{post.title}</h4>
                   </a>
                   {/* Add published date or other details */} 
-                  <p className="video-details">Published: {new Date(video.publishedAt).toLocaleDateString()}</p>
+                  {post.publishedAt && <p className="video-details">Published: {new Date(post.publishedAt).toLocaleDateString()}</p>}
                 </div>
               ))}
             </div>

@@ -121,79 +121,67 @@ router.get('/content', auth, async (req, res) => {
       }
     }
 
-    const results = {};
+    const results = { posts: [], likedContent: [] };
+    const errors = {};
     const maxResultsPerFetch = 15; // Limit results per category
 
-    // 1. Fetch Liked Videos
+    // 1. Fetch Liked Videos (map to likedContent format)
     try {
       const likedVideosResponse = await youtube.videos.list({
-        part: 'snippet,contentDetails,statistics',
+        part: 'snippet,statistics', // No need for contentDetails unless parsing duration
         myRating: 'like',
         maxResults: maxResultsPerFetch
       });
-      results.likedVideos = likedVideosResponse.data.items.map(item => ({
-        id: item.id,
-        title: item.snippet.title,
-        description: item.snippet.description,
-        publishedAt: item.snippet.publishedAt,
-        thumbnail: item.snippet.thumbnails?.default?.url,
-        channelTitle: item.snippet.channelTitle,
-        duration: item.contentDetails?.duration, // Need to parse ISO 8601 duration
-        viewCount: item.statistics?.viewCount
+      results.likedContent = likedVideosResponse.data.items.map(v => ({
+        platform: 'youtube',
+        id: v.id,
+        title: v.snippet.title,
+        channelTitle: v.snippet.channelTitle,
+        url: `https://youtube.com/watch?v=${v.id}`,
+        thumbnail: v.snippet.thumbnails?.high?.url || v.snippet.thumbnails?.default?.url,
+        likedAt: v.snippet.publishedAt // YouTube doesn’t expose like‑time, use publishedAt as placeholder
+        // Add stats if needed: e.g., stats: { views: v.statistics?.viewCount, likes: v.statistics?.likeCount }
       }));
     } catch (error) {
       console.error('Error fetching liked videos:', error?.response?.data || error.message);
-      results.likedVideosError = 'Could not fetch liked videos.';
-      // Don't fail the whole request, just note the error
+      errors.likedContent = 'Could not fetch liked videos.';
     }
 
-    // 2. Fetch User's Playlists
-    try {
-      const playlistsResponse = await youtube.playlists.list({
-        part: 'snippet,contentDetails',
-        mine: true,
-        maxResults: maxResultsPerFetch
-      });
-      results.playlists = playlistsResponse.data.items.map(item => ({
-        id: item.id,
-        title: item.snippet.title,
-        description: item.snippet.description,
-        publishedAt: item.snippet.publishedAt,
-        thumbnail: item.snippet.thumbnails?.default?.url,
-        itemCount: item.contentDetails?.itemCount
-      }));
-    } catch (error) {
-      console.error('Error fetching playlists:', error?.response?.data || error.message);
-      results.playlistsError = 'Could not fetch playlists.';
-    }
-
-    // 3. Fetch User's Uploaded Videos (using search as before, requires channelId)
+    // 2. Fetch User's Uploaded Videos (map to posts format)
     if (channelId) {
         try {
             const searchResponse = await youtube.search.list({
                 part: 'snippet',
-                channelId: channelId,
+                channelId: channelId, // Use channelId fetched earlier
                 order: 'date',
                 maxResults: maxResultsPerFetch,
                 type: 'video'
             });
-            results.uploadedVideos = searchResponse.data.items.map(item => ({
-                id: item.id.videoId,
-                title: item.snippet.title,
-                description: item.snippet.description,
-                publishedAt: item.snippet.publishedAt,
-                thumbnail: item.snippet.thumbnails?.default?.url,
+            results.posts = searchResponse.data.items.map(v => ({
+                platform: 'youtube',
+                id: v.id.videoId,
+                title: v.snippet.title,
+                description: v.snippet.description,
+                url: `https://youtube.com/watch?v=${v.id.videoId}`,
+                thumbnail: v.snippet.thumbnails?.high?.url || v.snippet.thumbnails?.default?.url,
+                publishedAt: v.snippet.publishedAt,
+                stats: {} // Can enrich with videos.list call using videoId if needed
             }));
         } catch (error) {
             console.error('Error fetching uploaded videos:', error?.response?.data || error.message);
-            results.uploadedVideosError = 'Could not fetch uploaded videos.';
+            errors.posts = 'Could not fetch uploaded videos.';
         }
     } else {
-        results.uploadedVideosError = 'Cannot fetch uploads without Channel ID.';
+        errors.posts = 'Cannot fetch uploads without Channel ID.';
     }
 
+    // Combine results and errors
+    const responseData = { ...results };
+    if (Object.keys(errors).length > 0) {
+        responseData.errors = errors;
+    }
 
-    res.json(results);
+    res.json(responseData);
 
   } catch (error) {
     console.error('Error fetching YouTube content:', error?.response?.data || error.message);
