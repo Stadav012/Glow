@@ -26,6 +26,7 @@ app.use(
   })
 );
 
+ 
 /* ─────────── routes ─────────── */
 // Import routers and middleware
 const youtubeRoutes = require('./routes/youtube'); // Exports { router, oauth2Client }
@@ -49,6 +50,14 @@ app.use('/api/reflection', reflectionRoutes); // Assuming direct export
 app.use('/api/ai',         aiRoutes);         // Assuming direct export
 app.use('/api/mentor',     mentorRoutes);     // Assuming direct export
 
-/* ─────────── server ─────────── */
-const PORT = process.env.PORT || 5100;
-app.listen(PORT, () => console.log(`API listening on ${PORT}`));
+// /* ─────────── server ─────────── */
+// const PORT = process.env.PORT || 5100;
+// app.listen(PORT, () => console.log(`API listening on ${PORT}`));
+
+// const PORT = process.env.PORT || 5001;
+
+// app.listen(PORT, () => {
+//   console.log(`Server running on port ${PORT}`);
+// });
+
+ 
