@@ -32,7 +32,7 @@ app.use(
 const youtubeRoutes = require('./routes/youtube'); // Exports { router, oauth2Client }
 const socialRoutes = require('./routes/social');     // Exports router directly
 const authRoutes = require('./routes/auth');         // Exports { router, auth, tokenStore }
-const reflectionRoutes = require('./routes/reflection'); // Assuming direct export
+const reflectionRoutes = require('./routes/reflections'); // Exports router directly
 const aiRoutes = require('./routes/ai');             // Assuming direct export
 const mentorRoutes = require('./routes/mentor');     // Assuming direct export
 app.use('/api/social', require('./routes/socialContent'));
@@ -46,7 +46,7 @@ app.use('/api/social',         socialRoutes); // Correct: exports router directl
 
 // any other feature modules
 app.use('/api/auth',       authRoutes.router); // Correct: exports { router, ... }
-app.use('/api/reflection', reflectionRoutes); // Assuming direct export
+app.use('/api/reflections', reflectionRoutes); // Route for handling reflection endpoints
 app.use('/api/ai',         aiRoutes);         // Assuming direct export
 app.use('/api/mentor',     mentorRoutes);     // Assuming direct export
 

@@ -1,8 +1,12 @@
 import { useState, useEffect } from 'react';
 import './Dashboard.css';
+import ReflectionForm from '../reflection/ReflectionForm';
+import AnimatedGlobe from './AnimatedGlobe';
+import ReflectionGlobe from './ReflectionGlobe';
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
+  const [reflections, setReflections] = useState([]);
   // Update state to hold standardized content types
   const [content, setContent] = useState({
     posts: [], // User's uploaded videos
@@ -26,11 +30,24 @@ const Dashboard = () => {
     const fetchUserData = async () => {
       setLoading(true);
       try {
+        // Fetch user data
         const response = await fetch('http://localhost:5100/api/auth/me', {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
+
+        // Fetch reflections
+        const reflectionsRes = await fetch('http://localhost:5100/api/reflections', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (reflectionsRes.ok) {
+          const reflectionsData = await reflectionsRes.json();
+          setReflections(reflectionsData);
+        }
         if (!response.ok) throw new Error('Failed to fetch user data');
         const data = await response.json();
         setUser(data.user);
@@ -127,99 +144,25 @@ const Dashboard = () => {
         }}>Logout</button>
       </header>
 
-      <section className="content-section">
-        <h2>Your Content</h2>
-
-        {/* Display YouTube Fetch Errors */}
-        {contentErrors.youtube && <p className="connection-status error-message">YouTube Error: {contentErrors.youtube}</p>}
-
-        {/* YouTube Liked Content */} 
+      <div className="dashboard-content">
+        {/* Display Liked Content Globe Animation */}
         {content.likedContent.length > 0 && (
-          <div className="content-grid youtube-content">
-            <h3>Liked Content</h3>
-            <div className="grid">
-              {content.likedContent.map(item => (
-                <div key={item.id} className="content-card youtube-card">
-                  <a href={item.url} target="_blank" rel="noopener noreferrer">
-                    {item.thumbnail && <img src={item.thumbnail} alt={item.title} />}
-                    <h4>{item.title}</h4>
-                  </a>
-                  <p className="video-details">{item.channelTitle}</p>
-                  {/* Add more details if needed, e.g., likedAt (placeholder) */} 
-                </div>
-              ))}
-            </div>
-          </div>
+          <section className="liked-content-globe">
+            <AnimatedGlobe likedContent={content.likedContent} />
+          </section>
         )}
 
-        {/* User Posts (Uploads) */} 
-        {content.posts.length > 0 && (
-          <div className="content-grid youtube-content">
-            <h3>Your Posts</h3>
-            <div className="grid">
-              {content.posts.map(post => (
-                <div key={post.id} className="content-card youtube-card">
-                  <a href={post.url} target="_blank" rel="noopener noreferrer">
-                    {post.thumbnail && <img src={post.thumbnail} alt={post.title} />}
-                    <h4>{post.title}</h4>
-                  </a>
-                  {/* Add published date or other details */} 
-                  {post.publishedAt && <p className="video-details">Published: {new Date(post.publishedAt).toLocaleDateString()}</p>}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        <section className="reflection-section">
+          <ReflectionForm />
+        </section>
 
-        {/* Display Instagram Fetch Errors */} 
-        {contentErrors.instagram && <p className="connection-status error-message">Instagram Error: {contentErrors.instagram}</p>}
-
-        {/* Instagram Content (Keep existing structure) */} 
-        {hasInstagramContent && (
-          <div className="content-grid instagram-content">
-            <h3>Instagram Posts</h3>
-            <div className="grid">
-              {content.instagram.map(post => (
-                <div key={post.id} className="content-card instagram-card">
-                  {/* Link to post if possible */} 
-                  <img src={post.mediaUrl} alt={post.caption || 'Instagram Post'} />
-                  {post.caption && <p>{post.caption}</p>}
-                  {/* Display likes/timestamp if available */} 
-                  {/* <span>{post.likes} likes • {post.timestamp}</span> */} 
-                </div>
-              ))}
-            </div>
-          </div>
+        {reflections.length > 0 && (
+          <section className="reflections-globe">
+            <h2>Your Reflection History</h2>
+            <ReflectionGlobe reflections={reflections} />
+          </section>
         )}
-
-        {/* Connection Status & No Content Messages */} 
-        {!isYoutubeConnected && !isInstagramConnected ? (
-          // Case 1: No accounts linked
-          <div className="no-content">
-            <p>Connect your social media accounts to see your content here.</p>
-            <button onClick={() => window.location.href = '/auth'} className="connect-btn">
-              Connect Accounts
-            </button>
-          </div>
-        ) : (
-          // Case 2: At least one account linked
-          <>
-            {isYoutubeConnected && !hasYoutubeContent && !contentErrors.youtube && (
-              <p className="connection-status">YouTube connected, but no videos found or fetched yet.</p>
-            )}
-            {/* Add similar message for Instagram if needed */} 
-            {isInstagramConnected && !hasInstagramContent && !contentErrors.instagram && (
-              <p className="connection-status">Instagram connected, but no posts found or fetched yet.</p>
-            )}
-            {/* Optional: Add a button to re-sync or connect more accounts */} 
-            {(!hasYoutubeContent || !hasInstagramContent) && (!contentErrors.youtube && !contentErrors.instagram) && (
-                 <button onClick={() => window.location.href = '/auth'} className="connect-btn secondary">
-                   Manage Connections
-                 </button>
-            )}
-          </>
-        )}
-      </section>
+      </div>
     </div>
   );
 };

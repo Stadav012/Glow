@@ -2,11 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import './App.css';
 import AuthForm from './components/auth/AuthForm';
 import Dashboard from './components/dashboard/Dashboard';
-
- 
- 
- 
-import MatchList from './MatchList';
+import ReflectionForm from './components/reflection/ReflectionForm';
 
 
 function App() {
