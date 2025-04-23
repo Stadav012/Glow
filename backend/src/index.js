@@ -1,13 +1,13 @@
 const express = require('express');
 const cors    = require('cors');
 const session = require('express-session');
-const connectDB = require('./config/db');
+// const connectDB = require('./config/db');
 require('dotenv').config();
 
 const app = express();
 
 // Connect to MongoDB
-connectDB();
+// connectDB();
 
 /* ─────────── middleware ─────────── */
 app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:5173', credentials: true }));
@@ -50,10 +50,22 @@ app.use('/api/reflections', reflectionRoutes); // Route for handling reflection 
 app.use('/api/ai',         aiRoutes);         // Assuming direct export
 app.use('/api/mentor',     mentorRoutes);     // Assuming direct export
 
+<<<<<<< HEAD
+/* ─────────── server ─────────── */
+// const PORT = process.env.PORT || 5100;
+// app.listen(PORT, () => console.log(`API listening on ${PORT}`));
+
+const PORT = process.env.PORT || 5001;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+=======
 // /* ─────────── server ─────────── */
 const PORT = process.env.PORT || 5100;
 app.listen(PORT, () => console.log(`API listening on ${PORT}`));
 
 
+>>>>>>> cfc63379419001d2b4f33fb4a03a775f3d518943
 
  
