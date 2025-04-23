@@ -216,3 +216,9 @@ The Social Media API will provide endpoints for retrieving and managing social m
 - All endpoints return JSON.
 - Authentication may be required for POST endpoints.
 - More endpoints (analytics, comments, liked posts, etc.) can be added as needed.
+
+
+#### AI Taggin Analysis
+(base) daisytsenesa@wifi-10-41-193-157 ~ % curl -X POST http://localhost:5100/api/ai/analyze
+
+{"sentiment":"The sentiment of this text is positive and hopeful. The use of the words \"hopeful\" and the sparkles emoji \"✨\" indicate optimism and a positive outlook towards the future. Additionally, the hashtags #growth and #motivation suggest a focus on personal development and progress, further emphasizing the positive sentiment of the text.","tags":["#1.","#hopeful 2.","#futuregoals3.","#positivevibes4.","#inspiration5.","#dreambig"],"source":{"platform":"instagram","content":"Feeling hopeful about the future ✨ #growth #motivation"}}%           (base) daisytsenesa@wifi-10-41-193-157 ~ % 
