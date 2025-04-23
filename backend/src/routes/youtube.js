@@ -9,7 +9,7 @@ const { auth, tokenStore } = require('./auth');
 const oauth2Client = new OAuth2(
   process.env.YOUTUBE_CLIENT_ID,
   process.env.YOUTUBE_CLIENT_SECRET,
-  process.env.YOUTUBE_REDIRECT_URI || 'http://localhost:5000/api/social/youtube/callback'
+  process.env.YOUTUBE_REDIRECT_URI || 'http://localhost:5100/api/social/youtube/callback'
 );
 
 const oauth2 = google.oauth2({ version: 'v2', auth: oauth2Client });

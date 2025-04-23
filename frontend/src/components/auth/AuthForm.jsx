@@ -26,6 +26,8 @@ export default function AuthForm() {
     if (step === 2) {
       localStorage.setItem('signupForm', JSON.stringify(formData));
     }
+    // Clear form data for social login
+    setFormData({ ...formData, email: '', password: '' });
     window.location.href =
       `http://localhost:5100/api/social/${platform.toLowerCase()}/login?sessionId=${sessionId}`;
   };
@@ -40,12 +42,17 @@ export default function AuthForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await fetch('http://localhost:5100/api/auth/register', {
+    // Skip validation for social login
+    if (!formData.email && !formData.password) {
+      return;
+    }
+    const endpoint = isLogin ? 'login' : 'register';
+    const res = await fetch(`http://localhost:5100/api/auth/${endpoint}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...formData, sessionId })
     });
-    if (!res.ok) return alert('Registration failed, try again!');
+    if (!res.ok) return alert(`${isLogin ? 'Login' : 'Registration'} failed, try again!`);
     const { token } = await res.json();
     localStorage.setItem('token', token);
     navigate('/dashboard');
@@ -53,28 +60,43 @@ export default function AuthForm() {
 
   /* ───────── auto‑register after OAuth round‑trip ───────── */
   useEffect(() => {
-    if (searchParams.get('status') !== 'success') return;
+    const status = searchParams.get('status');
+    const error = searchParams.get('error');
+    
+    if (error) {
+      alert(`Authentication failed: ${error}`);
+      return;
+    }
+    
+    if (status !== 'success') return;
 
     const saved = JSON.parse(localStorage.getItem('signupForm'));
-    if (!saved) return;
+    const sessionId = searchParams.get('sessionId');
+    const endpoint = saved ? 'register' : 'login';
 
     (async () => {
-      const res = await fetch('http://localhost:5100/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...saved,
-          sessionId: searchParams.get('sessionId')
-        })
-      });
-      if (!res.ok) {
-        alert('Registration failed, try again');
-        return;
+      try {
+        const res = await fetch(`http://localhost:5100/api/auth/${endpoint}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...(saved || {}),
+            sessionId
+          })
+        });
+        
+        const data = await res.json();
+        
+        if (!res.ok) {
+          throw new Error(data.error || `${endpoint === 'login' ? 'Login' : 'Registration'} failed`);
+        }
+        
+        localStorage.setItem('token', data.token);
+        if (saved) localStorage.removeItem('signupForm');
+        navigate('/dashboard');
+      } catch (err) {
+        alert(err.message);
       }
-      const { token } = await res.json();
-      localStorage.setItem('token', token);
-      localStorage.removeItem('signupForm');
-      navigate('/dashboard');
     })();
   }, [searchParams, navigate]);
 

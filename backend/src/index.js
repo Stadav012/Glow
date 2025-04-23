@@ -50,6 +50,7 @@ app.use('/api/reflection', reflectionRoutes); // Assuming direct export
 app.use('/api/ai',         aiRoutes);         // Assuming direct export
 app.use('/api/mentor',     mentorRoutes);     // Assuming direct export
 
+<<<<<<< HEAD
 /* ─────────── server ─────────── */
 // const PORT = process.env.PORT || 5100;
 // app.listen(PORT, () => console.log(`API listening on ${PORT}`));
@@ -59,5 +60,12 @@ const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+=======
+// /* ─────────── server ─────────── */
+const PORT = process.env.PORT || 5100;
+app.listen(PORT, () => console.log(`API listening on ${PORT}`));
+
+
+>>>>>>> cfc63379419001d2b4f33fb4a03a775f3d518943
 
  
