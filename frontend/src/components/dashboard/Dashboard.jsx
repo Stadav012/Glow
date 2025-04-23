@@ -121,6 +121,10 @@ const Dashboard = () => {
           <h1>Welcome, {user.fullName}!</h1>
           {user.bio && <p className="user-bio">{user.bio}</p>}
         </div>
+        <button className="logout-btn" onClick={() => {
+          localStorage.removeItem('token');
+          window.location.href = '/';
+        }}>Logout</button>
       </header>
 
       <section className="content-section">

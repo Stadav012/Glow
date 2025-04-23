@@ -2,6 +2,11 @@
 
 .dashboard {
   min-height: 100vh;
+  min-width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
   padding: 2rem;
   background: linear-gradient(135deg, #1c1c1e 0%, #2c2c2e 100%);
   font-family: 'Poppins', sans-serif;
@@ -16,6 +21,9 @@
   backdrop-filter: blur(10px);
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .dashboard-header h1 {
@@ -33,7 +41,11 @@
 
 .content-section {
   max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .content-section h2 {
@@ -132,4 +144,22 @@
 
 .dashboard-error {
   color: #ff4444;
+}
+
+.logout-btn {
+  padding: 0.6rem 1.5rem;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(120deg, #FFD700, #FFA500);
+  color: #1c1c1e;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.15);
+  margin-left: 1.5rem;
+}
+.logout-btn:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 4px 16px rgba(255, 215, 0, 0.25);
 }

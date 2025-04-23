@@ -1,7 +1,7 @@
-// import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
-// import AuthForm from './components/auth/AuthForm';
-// import Dashboard from './components/dashboard/Dashboard';
+import AuthForm from './components/auth/AuthForm';
+import Dashboard from './components/dashboard/Dashboard';
 
  
  
@@ -11,11 +11,14 @@ import MatchList from './MatchList';
 
 function App() {
   return (
- 
-     
-    <div className="min-h-screen bg-gray-50">
-      <MatchList />
-    </div>
+
+    <Router>
+      <Routes>
+        <Route path="/" element={<Navigate to="/auth" />} />
+        <Route path="/auth" element={<AuthForm />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes>
+    </Router>
  
   );
 }
