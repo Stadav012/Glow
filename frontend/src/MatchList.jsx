@@ -20,7 +20,7 @@ export default function MatchList() {
     setLoading(true);
     try {
       const response = await fetch(
-        `/api/mentor/match?tags=${encodeURIComponent(tags)}`
+        `/api/mentor/match?tags=${encodeURIComponent(tags)}&minMatchScore=0.01`
       );
       if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './ReflectionForm.css';
 
 export default function ReflectionForm() {
@@ -8,16 +8,33 @@ export default function ReflectionForm() {
     prompt: '',
     timestamp: new Date().toISOString()
   });
+  const [prompts, setPrompts] = useState([]);
 
   const moodOptions = ['Happy', 'Energetic', 'Calm', 'Tired', 'Stressed', 'Anxious'];
 
-  const dailyPrompts = [
-    'What inspired you today?',
-    'What challenges did you face?',
-    'What are you grateful for?',
-    'What did you learn today?',
-    'How did you take care of yourself today?'
-  ];
+  useEffect(() => {
+    const fetchPrompts = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('http://localhost:5100/api/reflections/prompts/personalized', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        const data = await response.json();
+        setPrompts(data.prompts);
+      } catch (error) {
+        console.error('Error fetching prompts:', error);
+        setPrompts([
+          'What inspired you today?',
+          'What challenges did you face?',
+          'What are you grateful for?'
+        ]);
+      }
+    };
+
+    fetchPrompts();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -66,11 +83,12 @@ export default function ReflectionForm() {
           <div className="mood-selector">
             <h3>How are you feeling?</h3>
             <div className="mood-options">
-              {moodOptions.map(mood => (
+              {moodOptions.map((mood, index) => (
                 <button
                   key={mood}
                   type="button"
                   className={`mood-btn ${reflection.mood === mood ? 'selected' : ''}`}
+                  style={{ '--animation-order': index }}
                   onClick={() => setReflection({ ...reflection, mood })}
                 >
                   {mood}
@@ -80,13 +98,14 @@ export default function ReflectionForm() {
           </div>
 
           <div className="prompt-section">
-            <h3>Today's Prompt</h3>
+            <h3>Personalized Prompts</h3>
             <div className="prompt-options">
-              {dailyPrompts.map(prompt => (
+              {prompts.map((prompt, index) => (
                 <button
                   key={prompt}
                   type="button"
                   className={`prompt-btn ${reflection.prompt === prompt ? 'selected' : ''}`}
+                  style={{ '--animation-order': index }}
                   onClick={() => setReflection({ ...reflection, prompt })}
                 >
                   {prompt}

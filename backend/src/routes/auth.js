@@ -23,24 +23,48 @@ const auth = async (req, res, next) => {
 /* ---------- REGISTER / LINK ---------- */
 router.post('/register', async (req, res) => {
     try {
-      const { email, password, fullName, bio, sessionId } = req.body;
+      const { email, password, fullName, bio, sessionId, platform } = req.body;
       if (!email || !password || !fullName)
         return res.status(400).json({ error: 'Missing required fields' });
   
-      /* ── 1. look up user by email ───────────────────────────── */
-      let user = await User.findOne({ email });
-  
+      /* ── 1. look up user by email (case-insensitive) ───────────────────────────── */
+      let user = await User.findOne({ email: { $regex: new RegExp('^' + email + '$', 'i') } });
+      
       /* ── 2A. if user exists, just link social creds & return JWT ── */
       if (user) {
         if (sessionId && tokenStore.has(sessionId)) {
-          const { tokens, channelData } = tokenStore.get(sessionId);
-          user.socialAccounts.youtube = {
-            accessToken:  tokens.access_token,
-            refreshToken: tokens.refresh_token,
-            channelId:    channelData?.channelId || channelData?.id || null
-          };
-          tokenStore.delete(sessionId);
-          await user.save();
+          try {
+            const { tokens, channelData } = tokenStore.get(sessionId);
+            
+            if (!tokens) {
+              return res.status(400).json({ error: 'Invalid social account data' });
+            }
+            
+            if (platform === 'youtube') {
+              if (!tokens.access_token || !tokens.refresh_token) {
+                return res.status(400).json({ error: 'Invalid YouTube tokens' });
+              }
+              user.socialAccounts.youtube = {
+                accessToken: tokens.access_token,
+                refreshToken: tokens.refresh_token,
+                channelId: channelData?.channelId || channelData?.id || null
+              };
+            } else if (platform === 'instagram') {
+              if (!tokens.access_token || !tokens.user_id) {
+                return res.status(400).json({ error: 'Invalid Instagram tokens' });
+              }
+              user.socialAccounts.instagram = {
+                accessToken: tokens.access_token,
+                userId: tokens.user_id
+              };
+            }
+            
+            await user.save();
+            tokenStore.delete(sessionId);
+          } catch (socialError) {
+            console.error('Social account linking error:', socialError);
+            return res.status(400).json({ error: 'Failed to link social account' });
+          }
         }
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
         return res.status(200).json({ token });
@@ -51,13 +75,37 @@ router.post('/register', async (req, res) => {
       user = new User({ email, password: hashedPassword, fullName, bio });
   
       if (sessionId && tokenStore.has(sessionId)) {
-        const { tokens, channelData } = tokenStore.get(sessionId);
-        user.socialAccounts.youtube = {
-          accessToken:  tokens.access_token,
-          refreshToken: tokens.refresh_token,
-          channelId:    channelData?.channelId || channelData?.id || null
-        };
-        tokenStore.delete(sessionId);
+        try {
+          const { tokens, channelData } = tokenStore.get(sessionId);
+          
+          if (!tokens) {
+            throw new Error('Invalid social account data');
+          }
+          
+          if (platform === 'youtube') {
+            if (!tokens.access_token || !tokens.refresh_token) {
+              throw new Error('Invalid YouTube tokens');
+            }
+            user.socialAccounts.youtube = {
+              accessToken: tokens.access_token,
+              refreshToken: tokens.refresh_token,
+              channelId: channelData?.channelId || channelData?.id || null
+            };
+          } else if (platform === 'instagram') {
+            if (!tokens.access_token || !tokens.user_id) {
+              throw new Error('Invalid Instagram tokens');
+            }
+            user.socialAccounts.instagram = {
+              accessToken: tokens.access_token,
+              userId: tokens.user_id
+            };
+          }
+          
+          tokenStore.delete(sessionId);
+        } catch (socialError) {
+          console.error('Social account linking error:', socialError);
+          throw new Error('Failed to link social account');
+        }
       }
   
       await user.save();
@@ -65,8 +113,12 @@ router.post('/register', async (req, res) => {
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
       res.status(201).json({ token });
     } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Error creating or linking user' });
+      console.error('Registration error:', err);
+      if (err.message === 'Failed to link social account') {
+        res.status(400).json({ error: err.message });
+      } else {
+        res.status(500).json({ error: 'Error creating user account' });
+      }
     }
   });
 

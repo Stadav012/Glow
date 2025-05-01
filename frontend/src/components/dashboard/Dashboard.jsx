@@ -1,12 +1,31 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import './Dashboard.css';
-import ReflectionForm from '../reflection/ReflectionForm';
+import GeminiReflectionForm from '../reflection/GeminiReflectionForm';
 import AnimatedGlobe from './AnimatedGlobe';
-import ReflectionGlobe from './ReflectionGlobe';
+import ReflectionWall from './ReflectionWall';
+import MentorList from '../mentor/MentorList';
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
   const [reflections, setReflections] = useState([]);
+  
+  // Function to fetch reflections
+  const fetchReflections = useCallback(async (token) => {
+    try {
+      const reflectionsRes = await fetch('http://localhost:5100/api/reflections', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (reflectionsRes.ok) {
+        const reflectionsData = await reflectionsRes.json();
+        setReflections(reflectionsData);
+      }
+    } catch (error) {
+      console.error('Error fetching reflections:', error);
+    }
+  }, []);
   // Update state to hold standardized content types
   const [content, setContent] = useState({
     posts: [], // User's uploaded videos
@@ -37,17 +56,8 @@ const Dashboard = () => {
           }
         });
 
-        // Fetch reflections
-        const reflectionsRes = await fetch('http://localhost:5100/api/reflections', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        
-        if (reflectionsRes.ok) {
-          const reflectionsData = await reflectionsRes.json();
-          setReflections(reflectionsData);
-        }
+        // Fetch reflections using the callback
+        await fetchReflections(token);
         if (!response.ok) throw new Error('Failed to fetch user data');
         const data = await response.json();
         setUser(data.user);
@@ -145,6 +155,10 @@ const Dashboard = () => {
       </header>
 
       <div className="dashboard-content">
+        <section className="mentor-recommendations">
+          <MentorList reflections={reflections} socialContent={content} />
+        </section>
+
         {/* Display Liked Content Globe Animation */}
         {content.likedContent.length > 0 && (
           <section className="liked-content-globe">
@@ -153,13 +167,16 @@ const Dashboard = () => {
         )}
 
         <section className="reflection-section">
-          <ReflectionForm />
+          <GeminiReflectionForm onReflectionSubmitted={() => {
+            const token = localStorage.getItem('token');
+            if (token) fetchReflections(token);
+          }} />
         </section>
 
         {reflections.length > 0 && (
-          <section className="reflections-globe">
+          <section className="reflections-wall">
             <h2>Your Reflection History</h2>
-            <ReflectionGlobe reflections={reflections} />
+            <ReflectionWall reflections={reflections} />
           </section>
         )}
       </div>

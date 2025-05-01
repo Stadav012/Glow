@@ -2,6 +2,51 @@ const express = require('express');
 const router = express.Router();
 const Reflection = require('../models/Reflection');
 const auth = require('../middleware/auth');
+const { generateReflectionPrompts } = require('../services/promptGenerator');
+const User = require('../models/User');
+
+// Get personalized prompts
+router.get('/prompts/personalized', auth, async (req, res) => {
+  try {
+    // Get user's complete social data from the database
+    const user = await User.findById(req.user._id).select('youtubeData socialContent');
+    
+    if (!user) {
+      console.log('User not found, returning default prompts');
+      return res.json({
+        prompts: [
+          'What inspired you today?',
+          'What challenges did you face?',
+          'What are you grateful for?'
+        ]
+      });
+    }
+
+    // Prepare social data object for prompt generation
+    const socialData = {
+      youtube: user.youtubeData?.channelDescription || '',
+      recentContent: user.socialContent?.posts || [],
+      interests: user.socialContent?.interests || [],
+      engagement: user.socialContent?.engagement || {}
+    };
+
+    console.log('Collected social data for prompt generation:', socialData);
+
+    // Generate personalized prompts based on user's social data
+    const personalizedPrompts = await generateReflectionPrompts(socialData);
+    console.log('Generated personalized prompts:', personalizedPrompts);
+    res.json({ prompts: personalizedPrompts });
+  } catch (error) {
+    console.error('Error generating personalized prompts:', error);
+    res.status(500).json({
+      prompts: [
+        'What inspired you today?',
+        'What challenges did you face?',
+        'What are you grateful for?'
+      ]
+    });
+  }
+});
 
 // Create a new reflection
 router.post('/', auth, async (req, res) => {

@@ -62,13 +62,14 @@ export default function AuthForm() {
   useEffect(() => {
     const status = searchParams.get('status');
     const error = searchParams.get('error');
+    const platform = searchParams.get('platform');
     
     if (error) {
       alert(`Authentication failed: ${error}`);
       return;
     }
     
-    if (status !== 'success') return;
+    if (status !== 'success' || !platform) return;
 
     const saved = JSON.parse(localStorage.getItem('signupForm'));
     const sessionId = searchParams.get('sessionId');
@@ -81,7 +82,8 @@ export default function AuthForm() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             ...(saved || {}),
-            sessionId
+            sessionId,
+            platform
           })
         });
         
@@ -95,6 +97,7 @@ export default function AuthForm() {
         if (saved) localStorage.removeItem('signupForm');
         navigate('/dashboard');
       } catch (err) {
+        console.error('Auth error:', err);
         alert(err.message);
       }
     })();
@@ -129,7 +132,7 @@ export default function AuthForm() {
             <h2>Create Account</h2>
             <form onSubmit={(e) => { e.preventDefault(); nextStep(); }}>
               <input name="fullName" placeholder="Full Name" value={formData.fullName} onChange={handleChange} required />
-              <textarea name="bio" placeholder="Tell us about yourself" value={formData.bio} onChange={handleChange} required />
+              <input name="bio" placeholder="Tell us about yourself in one line" value={formData.bio} onChange={handleChange} required />
               <input name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
               <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} required />
               <input type="password" name="confirmPassword" placeholder="Confirm Password" value={formData.confirmPassword} onChange={handleChange} required />

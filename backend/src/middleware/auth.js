@@ -5,20 +5,31 @@ const auth = async (req, res, next) => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
     if (!token) {
-      throw new Error('No authentication token provided');
+      return res.status(401).json({ error: 'No authentication token provided' });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret');
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret');
+    } catch (e) {
+      if (e.name === 'TokenExpiredError') {
+        return res.status(401).json({ error: 'Token expired', code: 'TOKEN_EXPIRED' });
+      }
+      return res.status(401).json({ error: 'Invalid token', code: 'TOKEN_INVALID' });
+    }
+
     const user = await User.findOne({ _id: decoded.id });
-
     if (!user) {
-      throw new Error('User not found');
+      return res.status(401).json({ error: 'User not found', code: 'USER_NOT_FOUND' });
     }
 
+    // Add token to user session
+    req.token = token;
     req.user = user;
     next();
   } catch (error) {
-    res.status(401).json({ error: 'Please authenticate.' });
+    console.error('Auth middleware error:', error);
+    res.status(401).json({ error: 'Authentication failed', code: 'AUTH_FAILED' });
   }
 };
 

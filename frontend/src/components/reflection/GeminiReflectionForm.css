@@ -1,0 +1,206 @@
+.gemini-reflection-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+}
+
+.gemini-reflection-card {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2rem;
+  border-radius: 28px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
+  max-width: 800px;
+  animation: slideUp 0.5s ease-out;
+  backdrop-filter: blur(10px);
+  color: #fff;
+}
+
+.gemini-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.gemini-header h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0;
+  background: linear-gradient(120deg, #8e2de2, #4a00e0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gemini-mood-indicator {
+  margin-top: 1rem;
+}
+
+.selected-mood {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  font-size: 0.9rem;
+  color: #fff;
+}
+
+.gemini-chat-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.gemini-prompt-message {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.gemini-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #8e2de2, #4a00e0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.gemini-message {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1.5rem;
+  border-radius: 20px;
+  flex-grow: 1;
+}
+
+.prompt-text {
+  margin: 0;
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+.prompt-text.typing::after {
+  content: '|';
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+.next-prompt-btn {
+  background: none;
+  border: none;
+  color: #8e2de2;
+  padding: 0.5rem 0;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  transition: color 0.3s;
+}
+
+.next-prompt-btn:hover {
+  color: #4a00e0;
+}
+
+.gemini-reflection-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.mood-selector {
+  margin-bottom: 1rem;
+}
+
+.mood-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+}
+
+.mood-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.75rem;
+  border-radius: 12px;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s;
+  animation: fadeIn 0.5s ease-out forwards;
+  animation-delay: calc(var(--animation-order) * 0.1s);
+  opacity: 0;
+}
+
+.mood-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.mood-btn.selected {
+  background: linear-gradient(135deg, #8e2de2, #4a00e0);
+  border-color: transparent;
+}
+
+.response-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+textarea {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1rem;
+  color: #fff;
+  font-size: 1rem;
+  resize: vertical;
+  min-height: 120px;
+  transition: border-color 0.3s;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #8e2de2;
+}
+
+.submit-btn {
+  background: linear-gradient(135deg, #8e2de2, #4a00e0);
+  border: none;
+  padding: 1rem;
+  border-radius: 12px;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(142, 45, 226, 0.3);
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
