@@ -20,7 +20,13 @@ const startServer = async () => {
 };
 
 /* ─────────── middleware ─────────── */
-app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:5173', credentials: true }));
+// Configure CORS for production and development environments
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production'
+    ? ['https://glow-frontend.vercel.app', 'https://glow-git-main-stanleywebs911.vercel.app']
+    : 'http://localhost:5173',
+  credentials: true
+}));
 app.use(express.json());
 
 // Error handling middleware
