@@ -4,6 +4,10 @@
     {
       "source": "/api/:path*",
       "destination": "https://glow-backend.vercel.app/api/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ],
   "buildCommand": "npm run build",
