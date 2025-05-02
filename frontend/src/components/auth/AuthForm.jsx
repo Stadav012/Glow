@@ -29,7 +29,7 @@ export default function AuthForm() {
     // Clear form data for social login
     setFormData({ ...formData, email: '', password: '' });
     window.location.href =
-      `http://localhost:5100/api/social/${platform.toLowerCase()}/login?sessionId=${sessionId}`;
+      `${import.meta.env.VITE_BACKEND_URL}/api/social/${platform.toLowerCase()}/login?sessionId=${sessionId}`;
   };
 
   const nextStep = () => {
@@ -47,7 +47,7 @@ export default function AuthForm() {
       return;
     }
     const endpoint = isLogin ? 'login' : 'register';
-    const res = await fetch(`http://localhost:5100/api/auth/${endpoint}`, {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/${endpoint}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...formData, sessionId })
@@ -77,7 +77,7 @@ export default function AuthForm() {
 
     (async () => {
       try {
-        const res = await fetch(`http://localhost:5100/api/auth/${endpoint}`, {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/${endpoint}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

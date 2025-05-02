@@ -12,7 +12,7 @@ const Dashboard = () => {
   // Function to fetch reflections
   const fetchReflections = useCallback(async (token) => {
     try {
-      const reflectionsRes = await fetch('http://localhost:5100/api/reflections', {
+      const reflectionsRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/reflections`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -50,7 +50,7 @@ const Dashboard = () => {
       setLoading(true);
       try {
         // Fetch user data
-        const response = await fetch('http://localhost:5100/api/auth/me', {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/me`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -73,7 +73,7 @@ const Dashboard = () => {
         // Fetch YouTube content if account is connected
         if (data.user.socialAccounts?.youtube?.accessToken) { // Check for accessToken instead of channelId
           try {
-            const youtubeRes = await fetch(`http://localhost:5100/api/social/youtube/content`, {
+            const youtubeRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/social/youtube/content`, {
               headers: { 'Authorization': `Bearer ${token}` }
             });
             if (youtubeRes.ok) {
@@ -105,7 +105,7 @@ const Dashboard = () => {
         // Fetch Instagram content (keep existing logic if needed)
         if (data.user.socialAccounts?.instagram?.userId) {
           try {
-            const instaRes = await fetch(`http://localhost:5100/api/social/instagram/content`, {
+            const instaRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/social/instagram/content`, {
               headers: { 'Authorization': `Bearer ${token}` }
             });
             if (instaRes.ok) {

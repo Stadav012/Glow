@@ -30,6 +30,7 @@ Focus areas:
 - Reflection feature implementation
 - User interaction components
 
+
 Key folders/files:
 - `backend/src/routes/reflection/`
 - `frontend/src/components/reflection/`
