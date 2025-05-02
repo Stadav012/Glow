@@ -60,11 +60,11 @@ router.get('/callback', async (req, res) => {
     const { sessionId } = JSON.parse(Buffer.from(state, 'base64').toString());
     tokenStore.set(sessionId, { tokens, channelData, platform: 'youtube' });
 
-    const frontendUrl = process.env.NODE_ENV === 'production' ? 'https://glow-backend.vercel.app' : 'http://localhost:5173';
+    const frontendUrl = process.env.NODE_ENV === 'production' ? process.env.FRONTEND_URL : 'http://localhost:5173';
     res.redirect(`${frontendUrl}/auth?platform=youtube&status=success&sessionId=${sessionId}`);
   } catch (error) {
     console.error('YouTube OAuth error:', error?.response?.data || error.message);
-    const frontendUrl = process.env.NODE_ENV === 'production' ? 'https://glow-backend.vercel.app' : 'http://localhost:5173';
+    const frontendUrl = process.env.NODE_ENV === 'production' ? process.env.FRONTEND_URL : 'http://localhost:5173';
     res.redirect(`${frontendUrl}/auth?platform=youtube&status=error&msg=${encodeURIComponent(error.message)}`);
   }
 });
