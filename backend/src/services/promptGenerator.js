@@ -102,31 +102,44 @@ async function generateReflectionPrompts(socialData) {
     // Only proceed with YouTube-specific prompts if we have valid activity
     const hasValidYoutubeActivity = youtubeActivity.liked.length > 0 || youtubeActivity.watched.length > 0;
 
-    const prompt = `Based on ${hasValidYoutubeActivity ? 'this person\'s specific YouTube activity' : 'the available user data'}, generate 3 ${hasValidYoutubeActivity ? 'highly personalized' : 'thoughtful'} reflection prompts. ${hasValidYoutubeActivity ? 'Use the exact video titles, channel names, and engagement patterns in your questions.' : 'Focus on general patterns of online engagement and interests.'}
+    const prompt = `You are a perceptive media analyst and personal growth coach. Your task is to analyze this person's YouTube activity and generate thought-provoking reflection prompts that help them uncover deeper patterns and meaning in their content consumption.
 
-    User's Recent YouTube Activity:
+    USER'S CONTENT PROFILE:
+    Recent YouTube Activity:
     ${youtubeDetails.recentTitles.map(v => `- "${v.title}" by ${v.channel}`).join('\n') || 'No YouTube data available'}
     
-    Frequently Watched Channels:
+    Content Creators They Follow:
     ${[...new Set([...youtubeDetails.likedChannels, ...youtubeDetails.watchedChannels])].slice(0, 3).join('\n') || 'No channel data available'}
     
-    Recent Content Created:
+    Their Own Content:
     ${contentSummary || 'No recent posts available'}
     
-    Core Interests:
+    Interests & Engagement:
     ${interestsSummary || 'No interests specified'}
-    
-    Engagement Patterns:
     ${engagementPatterns}
 
-    Instructions:
-    1. Create 3 thought-provoking questions that MUST reference specific video titles or channel names from their activity
-    2. Use the actual content titles and creator names in your questions to make them highly personal
-    3. Connect their specific viewing choices to deeper insights about their interests and growth
-    4. Frame questions around particular videos or channels they've engaged with
-    5. Each prompt must include at least one specific reference to their actual activity
+    ANALYSIS OBJECTIVES:
+    1. Identify recurring themes, topics, or patterns across their watched and liked content
+    2. Notice any progression or evolution in their content choices over time
+    3. Look for connections between different creators or topics they engage with
+    4. Consider how their content choices reflect their aspirations or areas of growth
+    5. Analyze the balance between entertainment, education, and personal development in their choices
 
-    Format each prompt as a complete, conversational question that ties their specific content choices to deeper reflection.`;
+    PROMPT GENERATION GUIDELINES:
+    1. Each prompt must reference specific videos, channels, or patterns from their activity
+    2. Focus on uncovering the 'why' behind their content choices rather than just the 'what'
+    3. Help them discover connections between seemingly unrelated content they consume
+    4. Encourage reflection on how their content choices influence their perspectives and growth
+    5. Frame questions that help them examine their content consumption critically and mindfully
+
+    IMPORTANT:
+    - Avoid generic questions that could apply to anyone
+    - Make direct references to specific content they've engaged with
+    - Focus on patterns and themes rather than individual pieces of content
+    - Help them discover insights about themselves through their content choices
+    - Encourage them to think about the impact of their media consumption on their personal growth
+
+    Generate 3 insightful reflection prompts that help them uncover meaningful patterns and insights about themselves through their content choices.`;
 
     // Log detailed prompt data for debugging
     console.log('YouTube Activity being sent to OpenAI:', {
