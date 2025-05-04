@@ -22,9 +22,13 @@ router.get('/prompts/personalized', auth, async (req, res) => {
       });
     }
 
-    // Prepare social data object for prompt generation
+    // Prepare social data object for prompt generation with structured YouTube data
     const socialData = {
-      youtube: user.youtubeData?.channelDescription || '',
+      youtube: {
+        liked: user.socialContent?.likedContent?.filter(content => content.platform === 'youtube') || [],
+        watchHistory: user.socialContent?.posts?.filter(post => post.platform === 'youtube') || [],
+        playlists: [] // Reserved for future playlist integration
+      },
       recentContent: user.socialContent?.posts || [],
       interests: user.socialContent?.interests || [],
       engagement: user.socialContent?.engagement || {}
