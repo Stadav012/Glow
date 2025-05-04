@@ -3,6 +3,7 @@ import './App.css';
 import AuthForm from './components/auth/AuthForm';
 import Dashboard from './components/dashboard/Dashboard';
 import ReflectionForm from './components/reflection/ReflectionForm';
+import LandingPage from './components/landing/LandingPage';
 
 
 function App() {
@@ -10,7 +11,7 @@ function App() {
 
     <Router>
       <Routes>
-        <Route path="/" element={<Navigate to="/auth" />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/auth" element={<AuthForm />} />
         <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
