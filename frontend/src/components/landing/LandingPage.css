@@ -2,7 +2,7 @@
   --glass-bg: rgba(255, 255, 255, 0.1);
   --glass-border: rgba(255, 255, 255, 0.2);
   --glass-shadow: rgba(0, 0, 0, 0.1);
-  --accent-color: #6366f1;
+  --accent-color: #FFD700;
   --text-primary: #ffffff;
   --text-secondary: rgba(255, 255, 255, 0.8);
 }
@@ -16,6 +16,7 @@
   padding: 2rem;
   position: relative;
   overflow: hidden;
+  width: 100%;
 }
 
 .glass-card {
@@ -24,8 +25,9 @@
   border: 1px solid var(--glass-border);
   border-radius: 24px;
   padding: 3rem;
-  max-width: 1000px;
-  width: 100%;
+  max-width: 1200px;
+  width: 90%;
+  margin: 0 auto;
   box-shadow: 0 8px 32px var(--glass-shadow);
   position: relative;
   z-index: 1;
@@ -99,23 +101,25 @@
 
 input[type="email"] {
   flex: 1;
-  padding: 1rem 1.5rem;
+  padding: 1.2rem 1.5rem;
   border-radius: 12px;
   border: 1px solid var(--glass-border);
   background: rgba(255, 255, 255, 0.1);
   color: var(--text-primary);
-  font-size: 1rem;
+  font-size: 1.1rem;
+  min-width: 300px;
 }
 
 .submit-btn {
-  padding: 1rem 2rem;
+  padding: 1.2rem 2.5rem;
   border-radius: 12px;
   border: none;
   background: var(--accent-color);
-  color: white;
+  color: #000;
   font-weight: 600;
   cursor: pointer;
   transition: transform 0.2s ease;
+  font-size: 1.1rem;
 }
 
 .submit-btn:hover {

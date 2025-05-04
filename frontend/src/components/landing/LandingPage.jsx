@@ -32,26 +32,26 @@ export default function LandingPage() {
         
         <div className="mission-statement">
           <p className="lead-text">
-            We're flipping the narrative around media consumption for high school students.
-            Transform how you engage with educational content and reshape your mindset around learning.
+            We're transforming how high school students engage with media by starting with personalized reflection prompts.
+            Connect with mentors who understand your journey and have walked a similar path just a few steps ahead.
           </p>
         </div>
 
         <div className="features-grid">
           <div className="feature-card">
             <div className="feature-icon">🎯</div>
-            <h3>Targeted Content</h3>
-            <p>Curated educational media that resonates with your interests</p>
+            <h3>Personalized Reflection</h3>
+            <p>Thought-provoking prompts that help you understand your unique journey</p>
           </div>
           <div className="feature-card">
             <div className="feature-icon">🔄</div>
-            <h3>Mindset Shift</h3>
-            <p>Transform your perspective on learning and education</p>
+            <h3>Mentor Connection</h3>
+            <p>Connect with mentors who truly understand and inspire you</p>
           </div>
           <div className="feature-card">
             <div className="feature-icon">🌟</div>
-            <h3>Personal Growth</h3>
-            <p>Develop a growth mindset through engaging content</p>
+            <h3>Media Transformation</h3>
+            <p>Turn your media consumption into meaningful growth opportunities</p>
           </div>
         </div>
 
