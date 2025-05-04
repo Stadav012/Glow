@@ -102,44 +102,44 @@ async function generateReflectionPrompts(socialData) {
     // Only proceed with YouTube-specific prompts if we have valid activity
     const hasValidYoutubeActivity = youtubeActivity.liked.length > 0 || youtubeActivity.watched.length > 0;
 
-    const prompt = `You are a perceptive media analyst and personal growth coach. Your task is to analyze this person's YouTube activity and generate thought-provoking reflection prompts that help them uncover deeper patterns and meaning in their content consumption.
+    const prompt = `Yo! You're a super chill Gen Z content vibe checker! Your mission is to create some fun, relatable reflection prompts that help peeps understand their YouTube habits better. Keep it real and casual - like you're texting a friend! 🎯
 
-    USER'S CONTENT PROFILE:
-    Recent YouTube Activity:
-    ${youtubeDetails.recentTitles.map(v => `- "${v.title}" by ${v.channel}`).join('\n') || 'No YouTube data available'}
+    THE VIBE CHECK 📱
+    Recent Watches:
+    ${youtubeDetails.recentTitles.map(v => `- "${v.title}" by ${v.channel}`).join('\n') || 'No YouTube data yet'}
     
-    Content Creators They Follow:
-    ${[...new Set([...youtubeDetails.likedChannels, ...youtubeDetails.watchedChannels])].slice(0, 3).join('\n') || 'No channel data available'}
+    Fave Creators:
+    ${[...new Set([...youtubeDetails.likedChannels, ...youtubeDetails.watchedChannels])].slice(0, 3).join('\n') || 'Still exploring creators'}
     
-    Their Own Content:
-    ${contentSummary || 'No recent posts available'}
+    Their Content:
+    ${contentSummary || 'Nothing posted yet'}
     
-    Interests & Engagement:
-    ${interestsSummary || 'No interests specified'}
+    The Stats:
+    ${interestsSummary || 'Interests loading...'}
     ${engagementPatterns}
 
-    ANALYSIS OBJECTIVES:
-    1. Identify recurring themes, topics, or patterns across their watched and liked content
-    2. Notice any progression or evolution in their content choices over time
-    3. Look for connections between different creators or topics they engage with
-    4. Consider how their content choices reflect their aspirations or areas of growth
-    5. Analyze the balance between entertainment, education, and personal development in their choices
+    WHAT WE'RE LOOKING FOR 👀
+    1. Spot the vibes and trends in their watch history
+    2. See how their taste has evolved (glow up check!)
+    3. Find cool connections between different creators they watch
+    4. How their content choices match their goals and dreams
+    5. Check the mix between fun stuff and learning content
 
-    PROMPT GENERATION GUIDELINES:
-    1. Each prompt must reference specific videos, channels, or patterns from their activity
-    2. Focus on uncovering the 'why' behind their content choices rather than just the 'what'
-    3. Help them discover connections between seemingly unrelated content they consume
-    4. Encourage reflection on how their content choices influence their perspectives and growth
-    5. Frame questions that help them examine their content consumption critically and mindfully
+    HOW TO KEEP IT REAL 💯
+    1. Reference their actual videos and channels (no cap!)
+    2. Ask about the feels and thoughts behind their choices
+    3. Help them see cool patterns in what they watch
+    4. Keep it fun but make them think a bit
+    5. Use emojis and casual language, but don't overdo it
 
-    IMPORTANT:
-    - Avoid generic questions that could apply to anyone
-    - Make direct references to specific content they've engaged with
-    - Focus on patterns and themes rather than individual pieces of content
-    - Help them discover insights about themselves through their content choices
-    - Encourage them to think about the impact of their media consumption on their personal growth
+    REMEMBER TO:
+    - Skip the boring, generic stuff
+    - Name drop their fave content
+    - Look at the bigger picture vibes
+    - Help them understand their own taste
+    - Keep it light but meaningful
 
-    Generate 3 insightful reflection prompts that help them uncover meaningful patterns and insights about themselves through their content choices.`;
+    Drop 3 fun, relatable prompts that'll get them thinking about their content choices without feeling like homework!`;
 
     // Log detailed prompt data for debugging
     console.log('YouTube Activity being sent to OpenAI:', {
@@ -184,9 +184,9 @@ async function generateReflectionPrompts(socialData) {
     console.error('Error generating prompts:', error);
     // Return default prompts focused on academic redirection
     const defaultPrompts = [
-      'What patterns do you notice in the content that truly captures your attention?',
-      'How do your online interests reflect the future you envision for yourself?',
-      'What skills have you naturally developed through your digital activities?'
+      'ngl, what kind of content gets you hitting that like button faster than your morning alarm? 👀',
+      'your fyp is lowkey telling a story about your future... what vibe are you catching? ✨',
+      'spill the tea on the skills you've picked up from your fave content! 💅'
     ];
     console.log('Returning default prompts due to error:', defaultPrompts);
     return defaultPrompts;
