@@ -25,13 +25,13 @@ router.get('/prompts/personalized', auth, async (req, res) => {
     // Prepare social data object for prompt generation with structured YouTube data
     const socialData = {
       youtube: {
-        liked: user.socialContent?.likedContent?.filter(content => content.platform === 'youtube') || [],
-        watchHistory: user.socialContent?.posts?.filter(post => post.platform === 'youtube') || [],
-        playlists: [] // Reserved for future playlist integration
+        liked: user.socialContent?.youtube?.liked || [],
+        watchHistory: user.socialContent?.youtube?.watchHistory || [],
+        playlists: user.socialContent?.youtube?.playlists || []
       },
-      recentContent: user.socialContent?.posts || [],
-      interests: user.socialContent?.interests || [],
-      engagement: user.socialContent?.engagement || {}
+      recentContent: user.socialContent?.youtube?.liked || [],
+      interests: [],
+      engagement: {}
     };
 
     console.log('Collected social data for prompt generation:', socialData);
