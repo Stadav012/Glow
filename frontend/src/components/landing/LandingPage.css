@@ -1,22 +1,27 @@
 :root {
-  --glass-bg: rgba(255, 255, 255, 0.1);
-  --glass-border: rgba(255, 255, 255, 0.2);
-  --glass-shadow: rgba(0, 0, 0, 0.1);
-  --accent-color: #FFD700;
-  --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.8);
+  --glass-bg: rgba(0, 0, 0, 0.2);
+  --glass-border: rgba(255, 255, 255, 0.3);
+  --glass-shadow: rgba(0, 0, 0, 0.2);
+  --accent-color: #B8860B;
+  --text-primary: #000000;
+  --text-secondary: rgba(0, 0, 0, 0.8);
 }
 
 .landing-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #1e1b4b, #4f46e5);
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #B8860B, #FFD700);
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 2rem;
   position: relative;
   overflow: hidden;
-  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .glass-card {
@@ -39,7 +44,7 @@
   text-align: center;
   margin-bottom: 2rem;
   font-weight: 700;
-  background: linear-gradient(to right, #fff, #e0e7ff);
+  background: linear-gradient(to right, #000000, #B8860B);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -124,6 +129,7 @@ input[type="email"] {
 
 .submit-btn:hover {
   transform: scale(1.05);
+  color:#FFD700;
 }
 
 .success-message {
