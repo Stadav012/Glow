@@ -23,9 +23,11 @@ const startServer = async () => {
 // Configure CORS for production and development environments
 app.use(cors({
   origin: process.env.NODE_ENV === 'production'
-    ? ['https://glow-frontend-lime.vercel.app/', 'https://glow-git-main-stanleywebs911.vercel.app']
+    ? ['https://glow-frontend-lime.vercel.app', 'https://glow-git-main-stanleywebs911.vercel.app']
     : 'http://localhost:5173',
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 
