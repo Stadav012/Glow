@@ -30,6 +30,36 @@ const userSchema = new mongoose.Schema({
       userId: String
     }
   },
+  socialContent: {
+    youtube: {
+      liked: [{
+        platform: String,
+        id: String,
+        title: String,
+        channelTitle: String,
+        url: String,
+        thumbnail: String,
+        likedAt: Date,
+        stats: {
+          views: String,
+          likes: String
+        }
+      }],
+      watchHistory: [{
+        platform: String,
+        id: String,
+        title: String,
+        channelTitle: String,
+        url: String,
+        thumbnail: String,
+        watchedAt: Date
+      }],
+      playlists: [{
+        id: String,
+        title: String
+      }]
+    }
+  },
   createdAt: { 
     type: Date, 
     default: Date.now 

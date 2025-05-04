@@ -1,8 +1,7 @@
 const router = require('express').Router();
 const { google } = require('googleapis');
 const { OAuth2 } = google.auth;
-const User = require('../models/User'); // Import User model
-// Import auth middleware and tokenStore from auth.js
+const User = require('../models/User');
 const { auth, tokenStore } = require('./auth');
 
 /* ---------- OAuth client ---------- */
@@ -49,7 +48,6 @@ router.get('/callback', async (req, res) => {
       channelData = data.items?.[0]?.snippet || null;
     } catch (err) {
       if (err.response?.status === 403 && err.response.data?.error === 'youtubeSignupRequired') {
-        // user has no channel; fallback to basic Google profile
         const { data: userInfo } = await oauth2.userinfo.get();
         channelData = { title: userInfo.name, thumbnails: { default: { url: userInfo.picture } } };
       } else {
@@ -112,31 +110,31 @@ router.get('/content', auth, async (req, res) => {
         if (channelId) {
           req.user.socialAccounts.youtube.channelId = channelId;
           await req.user.save();
-        } else {
-          console.warn('Could not determine YouTube Channel ID for user:', req.user._id);
-          // Proceed without channel-specific fetches if ID is unavailable
         }
       } catch (channelError) {
         console.error('Error fetching channel ID:', channelError?.response?.data || channelError.message);
-        // Decide how to handle this - maybe return partial data or an error
-        // For now, let's try to continue fetching non-channel specific data
       }
+    }
+
+    // Initialize socialContent structure if not exists
+    if (!req.user.socialContent) {
+      req.user.socialContent = { youtube: {} };
+    } else if (!req.user.socialContent.youtube) {
+      req.user.socialContent.youtube = {};
     }
 
     const results = { posts: [], likedContent: [] };
     const errors = {};
-    const maxResultsPerFetch = 15; // Limit results per category
+    const maxResultsPerFetch = 15;
 
-    // 1. Fetch Liked Videos and Watch History
+    // 1. Fetch and store liked videos
     try {
-      // Fetch liked videos
       const likedVideosResponse = await youtube.videos.list({
         part: 'snippet,statistics,contentDetails',
         myRating: 'like',
         maxResults: maxResultsPerFetch
       });
 
-      // Process liked videos with enhanced data structure
       const likedVideos = likedVideosResponse.data.items.map(v => ({
         platform: 'youtube',
         id: v.id,
@@ -144,56 +142,70 @@ router.get('/content', auth, async (req, res) => {
         channelTitle: v.snippet.channelTitle,
         url: `https://youtube.com/watch?v=${v.id}`,
         thumbnail: v.snippet.thumbnails?.high?.url || v.snippet.thumbnails?.default?.url,
-        likedAt: v.snippet.publishedAt // YouTube doesn’t expose like‑time, use publishedAt as placeholder
-        // Add stats if needed: e.g., stats: { views: v.statistics?.viewCount, likes: v.statistics?.likeCount }
+        likedAt: v.snippet.publishedAt,
+        stats: {
+          views: v.statistics?.viewCount || '0',
+          likes: v.statistics?.likeCount || '0'
+        }
       }));
+
+      req.user.socialContent.youtube.liked = likedVideos;
+      results.likedContent = likedVideos;
     } catch (error) {
       console.error('Error fetching liked videos:', error?.response?.data || error.message);
       errors.likedContent = 'Could not fetch liked videos.';
     }
 
-    // 2. Fetch User's Uploaded Videos (map to posts format)
+    // 2. Fetch and store user's uploaded videos
     if (channelId) {
-        try {
-            const searchResponse = await youtube.search.list({
-                part: 'snippet',
-                channelId: channelId, // Use channelId fetched earlier
-                order: 'date',
-                maxResults: maxResultsPerFetch,
-                type: 'video'
-            });
-            results.posts = searchResponse.data.items.map(v => ({
-                platform: 'youtube',
-                id: v.id.videoId,
-                title: v.snippet.title,
-                description: v.snippet.description,
-                url: `https://youtube.com/watch?v=${v.id.videoId}`,
-                thumbnail: v.snippet.thumbnails?.high?.url || v.snippet.thumbnails?.default?.url,
-                publishedAt: v.snippet.publishedAt,
-                stats: {} // Can enrich with videos.list call using videoId if needed
-            }));
-        } catch (error) {
-            console.error('Error fetching uploaded videos:', error?.response?.data || error.message);
-            errors.posts = 'Could not fetch uploaded videos.';
-        }
+      try {
+        const searchResponse = await youtube.search.list({
+          part: 'snippet',
+          channelId: channelId,
+          order: 'date',
+          maxResults: maxResultsPerFetch,
+          type: 'video'
+        });
+
+        const uploadedVideos = searchResponse.data.items.map(v => ({
+          platform: 'youtube',
+          id: v.id.videoId,
+          title: v.snippet.title,
+          description: v.snippet.description,
+          url: `https://youtube.com/watch?v=${v.id.videoId}`,
+          thumbnail: v.snippet.thumbnails?.high?.url || v.snippet.thumbnails?.default?.url,
+          publishedAt: v.snippet.publishedAt
+        }));
+
+        req.user.socialContent.youtube.posts = uploadedVideos;
+        results.posts = uploadedVideos;
+      } catch (error) {
+        console.error('Error fetching uploaded videos:', error?.response?.data || error.message);
+        errors.posts = 'Could not fetch uploaded videos.';
+      }
     } else {
-        errors.posts = 'Cannot fetch uploads without Channel ID.';
+      errors.posts = 'Cannot fetch uploads without Channel ID.';
+    }
+
+    // Save the updated socialContent
+    try {
+      await req.user.save();
+      console.log('Successfully saved YouTube content to user profile');
+    } catch (saveError) {
+      console.error('Error saving YouTube content:', saveError);
+      errors.save = 'Failed to save YouTube content to profile.';
     }
 
     // Combine results and errors
     const responseData = { ...results };
     if (Object.keys(errors).length > 0) {
-        responseData.errors = errors;
+      responseData.errors = errors;
     }
 
     res.json(responseData);
-
   } catch (error) {
     console.error('Error fetching YouTube content:', error?.response?.data || error.message);
     if (error.response?.status === 401 || error.message.includes('invalid_grant')) {
-      // Consider clearing tokens if persistently failing
-      // req.user.socialAccounts.youtube = undefined;
-      // await req.user.save();
       return res.status(401).json({ error: 'YouTube authentication failed. Please reconnect your account.' });
     }
     res.status(500).json({ error: 'Failed to fetch YouTube content.' });
@@ -203,5 +215,4 @@ router.get('/content', auth, async (req, res) => {
 /* ---------- simple health‑check ---------- */
 router.get('/test', (_, res) => res.json({ ok: true }));
 
-// Export only the router, as tokenStore is now managed in auth.js
 module.exports = { router, oauth2Client };
