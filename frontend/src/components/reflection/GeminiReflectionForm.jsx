@@ -23,7 +23,7 @@ export default function GeminiReflectionForm({ onReflectionSubmitted }) {
       try {
         setIsLoading(true);
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:5100/api/reflections/prompts/personalized', {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/reflections/prompts/personalized`, {
           headers: {
             'Authorization': `Bearer ${token}`
           },
@@ -95,7 +95,7 @@ export default function GeminiReflectionForm({ onReflectionSubmitted }) {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5100/api/reflections', {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/reflections`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
