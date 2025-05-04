@@ -127,14 +127,17 @@ router.get('/content', auth, async (req, res) => {
     const errors = {};
     const maxResultsPerFetch = 15; // Limit results per category
 
-    // 1. Fetch Liked Videos (map to likedContent format)
+    // 1. Fetch Liked Videos and Watch History
     try {
+      // Fetch liked videos
       const likedVideosResponse = await youtube.videos.list({
-        part: 'snippet,statistics', // No need for contentDetails unless parsing duration
+        part: 'snippet,statistics,contentDetails',
         myRating: 'like',
         maxResults: maxResultsPerFetch
       });
-      results.likedContent = likedVideosResponse.data.items.map(v => ({
+
+      // Process liked videos with enhanced data structure
+      const likedVideos = likedVideosResponse.data.items.map(v => ({
         platform: 'youtube',
         id: v.id,
         title: v.snippet.title,

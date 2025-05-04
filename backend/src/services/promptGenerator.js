@@ -22,6 +22,15 @@ async function generateReflectionPrompts(socialData) {
     };
     console.log('Processing social data with structure:', sanitizedData);
     
+    // Log detailed YouTube data for debugging
+    if (socialData.youtube) {
+      console.log('YouTube Data Structure:', {
+        likedVideos: socialData.youtube.liked?.length || 0,
+        watchHistory: socialData.youtube.watchHistory?.length || 0,
+        playlists: socialData.youtube.playlists?.length || 0
+      });
+    }
+    
     const { youtube = {}, recentContent = [], interests = [], engagement = {} } = socialData;
 
     // Extract and validate YouTube activity details
@@ -119,6 +128,15 @@ async function generateReflectionPrompts(socialData) {
 
     Format each prompt as a complete, conversational question that ties their specific content choices to deeper reflection.`;
 
+    // Log detailed prompt data for debugging
+    console.log('YouTube Activity being sent to OpenAI:', {
+      selectedLikedVideos: youtubeActivity.liked.map(v => ({ title: v.title, channel: v.channelTitle })),
+      selectedWatchedVideos: youtubeActivity.watched.map(v => ({ title: v.title, channel: v.channelTitle })),
+      selectedPlaylists: youtubeActivity.playlists.map(p => ({ title: p.title })),
+      hasValidYoutubeActivity,
+      totalVideosProcessed: youtubeActivity.liked.length + youtubeActivity.watched.length
+    });
+    
     console.log('Sending prompt to OpenAI:', prompt);
 
     const response = await openai.chat.completions.create({
