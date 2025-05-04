@@ -32,7 +32,7 @@ const MentorList = ({ reflections, socialContent }) => {
   const fetchMentors = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5100/api/mentor/recommended', {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/mentor/recommended`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
