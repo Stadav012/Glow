@@ -25,10 +25,30 @@ async function generateReflectionPrompts(socialData) {
     const { youtube = {}, recentContent = [], interests = [], engagement = {} } = socialData;
 
     // Extract and validate YouTube activity details
+    // Randomly select and filter recent YouTube activity
+    const getRandomItems = (arr, count) => {
+      const shuffled = [...arr].sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, count);
+    };
+
     const youtubeActivity = {
-      liked: Array.isArray(youtube.liked) ? youtube.liked.filter(video => video && typeof video === 'object' && video.title && video.channelTitle) : [],
-      watched: Array.isArray(youtube.watchHistory) ? youtube.watchHistory.filter(video => video && typeof video === 'object' && video.title && video.channelTitle) : [],
-      playlists: Array.isArray(youtube.playlists) ? youtube.playlists.filter(playlist => playlist && typeof playlist === 'object' && playlist.title) : []
+      liked: Array.isArray(youtube.liked) 
+        ? getRandomItems(
+            youtube.liked.filter(video => video && typeof video === 'object' && video.title && video.channelTitle)
+            .slice(-20), // Only consider last 20 liked videos
+            3
+          ) : [],
+      watched: Array.isArray(youtube.watchHistory)
+        ? getRandomItems(
+            youtube.watchHistory.filter(video => video && typeof video === 'object' && video.title && video.channelTitle)
+            .slice(-20), // Only consider last 20 watched videos
+            3
+          ) : [],
+      playlists: Array.isArray(youtube.playlists)
+        ? getRandomItems(
+            youtube.playlists.filter(playlist => playlist && typeof playlist === 'object' && playlist.title),
+            2
+          ) : []
     };
 
     // Log validation results
@@ -108,16 +128,20 @@ async function generateReflectionPrompts(socialData) {
         content: prompt
       }],
       max_tokens: 200,
-      temperature: 0.7,
+      temperature: 0.9, // Increased temperature for more creative and varied responses
       n: 1
     });
 
     console.log('Received response from OpenAI:', response.choices[0].message.content);
 
-    const generatedPrompts = response.choices[0].message.content
+    // Process and randomize the generated prompts
+    let generatedPrompts = response.choices[0].message.content
       .split('\n')
       .filter(line => line.trim())
-      .slice(0, 3);
+      .slice(0, 4); // Get up to 4 prompts for more variety
+
+    // Randomly select 3 prompts from the generated ones
+    generatedPrompts = getRandomItems(generatedPrompts, 3);
 
     if (!generatedPrompts.length) {
       throw new Error('No prompts were generated from the OpenAI response');
