@@ -31,7 +31,7 @@
   font-size: 2.5rem;
   font-weight: 700;
   margin: 0;
-  background: linear-gradient(120deg, #8e2de2, #4a00e0);
+  background: linear-gradient(120deg, #FFD700, #FFA500);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -65,7 +65,7 @@
   width: 40px;
   height: 40px;
   border-radius: 20px;
-  background: linear-gradient(135deg, #8e2de2, #4a00e0);
+  background: linear-gradient(135deg, #FFD700, #FFA500);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -98,7 +98,7 @@
 .next-prompt-btn {
   background: none;
   border: none;
-  color: #8e2de2;
+  color: #FFD700;
   padding: 0.5rem 0;
   cursor: pointer;
   font-size: 0.9rem;
@@ -107,7 +107,7 @@
 }
 
 .next-prompt-btn:hover {
-  color: #4a00e0;
+  color: #FFA500;
 }
 
 .gemini-reflection-form {
@@ -145,7 +145,7 @@
 }
 
 .mood-btn.selected {
-  background: linear-gradient(135deg, #8e2de2, #4a00e0);
+  background: linear-gradient(135deg, #FFD700, #FFA500);
   border-color: transparent;
 }
 
@@ -169,11 +169,11 @@ textarea {
 
 textarea:focus {
   outline: none;
-  border-color: #8e2de2;
+  border-color: #FFD700;
 }
 
 .submit-btn {
-  background: linear-gradient(135deg, #8e2de2, #4a00e0);
+  background: linear-gradient(135deg, #FFD700, #FFA500);
   border: none;
   padding: 1rem;
   border-radius: 12px;
@@ -185,7 +185,7 @@ textarea:focus {
 
 .submit-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(142, 45, 226, 0.3);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
 }
 
 @keyframes slideUp {
