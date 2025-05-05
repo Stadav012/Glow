@@ -35,47 +35,35 @@ export default function LandingPage() {
 
         <div className="mission-statement">
         <p className="lead-text">
-            Made for high schoolers, open to all educators. Glow helps you unlearn the internet.
-            Real people. Real convos. Real perspective.
-            Not another app telling you to "rise and grind."
+            Made for high schoolers, open to curious educators.  
+            Glow helps you rethink what success actually looks like—using your feed, your voice, and people who actually get it.  
+            Not another adult yelling "stay in school." Chill.
         </p>
         </div>
 
         <div className="features-grid">
         <div className="feature-card">
-            <div className="feature-icon">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" fill="#2C1810"/>
-              </svg>
-            </div>
+            <div className="feature-icon">🎯</div>
             <h3>Smart Prompts (Not Cringe)</h3>
-            <p>We turn what you scroll into questions that actually make you think. No therapy voice required.</p>
+            <p>We flip your feed into convo starters that actually hit. No wellness quotes. No deep sighing.</p>
         </div>
         <div className="feature-card">
-            <div className="feature-icon">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.17-5.24l-1.42 1.42-3.75-3.75V5h2v6.57l3.17 3.17z" fill="#2C1810"/>
-              </svg>
-            </div>
-            <h3>Mentors, Not Motivators</h3>
-            <p>People who get it 'cause they lived it. No mics. No monologues. Just facts.</p>
+            <div className="feature-icon">🧠</div>
+            <h3>Mentors Who’ve Been There</h3>
+            <p>Not influencers. Not guidance counselors. Real people who made it out the same maze you're in.</p>
         </div>
         <div className="feature-card">
-            <div className="feature-icon">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.35.16-2h4.68c.09.65.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z" fill="#2C1810"/>
-              </svg>
-            </div>
+            <div className="feature-icon">📲</div>
             <h3>Flip the Algorithm</h3>
-            <p>What you scroll shapes your mindset. Let's twist that energy into something real.</p>
+            <p>Your scroll shapes your brain. We help you hijack it back—before it turns into hustle-hype soup.</p>
         </div>
         </div>
 
         <div className="waitlist-section">
         {!isSubmitted ? (
             <>
-            <h2>Be the First to Touch Glow</h2>
-            <p>Whether you're a high school student looking to level up or an educator wanting to explore, join us in reshaping how we learn from social media.</p>
+            <h2>Glow Is Kinda Like AirDrop for Ambition</h2>
+            <p>These are the convos that change your direction. Not gonna lie—this is the stuff no one teaches in class.</p>
             <form onSubmit={handleSubmit} className="email-form">
                 <input
                 type="email"
@@ -90,12 +78,13 @@ export default function LandingPage() {
         ) : (
             <div className="success-message">
             <h2>You're Locked In 🔐</h2>
-            <p>You are #{waitlistPosition} on the waitlist!</p>
-            <p>We'll hit you up soon. Stay tuned 👀</p>
-            <p>For now, go back to mindlessly scrolling through cat videos and food reels... we won't judge 😉</p>
+            <p>You’re #<b>{waitlistPosition}</b> in line. You trendsetter, you.</p>
+            <p>We’ll hit you up soon. Until then, keep dodging bad advice and weird hustle gurus.</p>
+            <p>Or go back to doomscrolling... no judgment 😉</p>
             </div>
         )}
         </div>
+
 
         <div className="floating-shapes">
           <div className="shape shape-1"></div>
