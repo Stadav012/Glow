@@ -1,8 +1,9 @@
 :root {
-  --glass-bg: rgba(0, 0, 0, 0.35);
-  --glass-border: rgba(255, 255, 255, 0.4);
-  --glass-shadow: rgba(0, 0, 0, 0.3);
-  --accent-color: #B8860B;
+  --glass-bg: rgba(0, 0, 0, 0.25);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --glass-shadow: rgba(0, 0, 0, 0.2);
+  --accent-color: #FFD700;
+  --accent-gradient: linear-gradient(135deg, #FFD700, #FFA500);
   --text-primary: #FFFFFF;
   --text-secondary: rgba(255, 255, 255, 0.9);
 }
@@ -66,8 +67,9 @@
 }
 
 .feature-card {
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   padding: 1.5rem;
   text-align: center;
   transition: transform 0.3s ease;
@@ -121,17 +123,19 @@ input[type="email"] {
   padding: 1.2rem 2.5rem;
   border-radius: 12px;
   border: none;
-  background: var(--accent-color);
+  background: var(--accent-gradient);
   color: #000;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: all 0.3s ease;
   font-size: 1.1rem;
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
 }
 
 .submit-btn:hover {
   transform: scale(1.05);
-  color:#FFD700;
+  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+  color: #FFFFFF;
 }
 
 .success-message {
