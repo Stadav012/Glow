@@ -1,11 +1,10 @@
 :root {
-  --glass-bg: rgba(0, 0, 0, 0.2);
-  --glass-border: rgba(255, 255, 255, 0.3);
-  --glass-shadow: rgba(0, 0, 0, 0.2);
+  --glass-bg: rgba(0, 0, 0, 0.35);
+  --glass-border: rgba(255, 255, 255, 0.4);
+  --glass-shadow: rgba(0, 0, 0, 0.3);
   --accent-color: #B8860B;
   --text-primary: #FFFFFF;
-  --text-secondary: rgba(255, 255, 255, 0.85);
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  --text-secondary: rgba(255, 255, 255, 0.9);
 }
 
 .landing-container {
@@ -45,7 +44,9 @@
   text-align: center;
   margin-bottom: 2rem;
   font-weight: 700;
-  letter-spacing: -0.02em;
+  background: linear-gradient(to right, #FFD700, #FFA500);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .lead-text {
@@ -55,8 +56,6 @@
   max-width: 800px;
   margin: 0 auto 3rem;
   line-height: 1.6;
-  font-weight: 400;
-  letter-spacing: -0.01em;
 }
 
 .features-grid {
@@ -67,7 +66,7 @@
 }
 
 .feature-card {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.25);
   border-radius: 16px;
   padding: 1.5rem;
   text-align: center;
@@ -87,13 +86,11 @@
   color: var(--text-primary);
   margin-bottom: 0.5rem;
   font-weight: 600;
-  letter-spacing: -0.01em;
 }
 
 .feature-card p {
   color: var(--text-secondary);
   font-size: 0.9rem;
-  font-weight: 400;
   line-height: 1.5;
 }
 
