@@ -81,7 +81,7 @@ export default function LandingPage() {
         ) : (
             <div className="success-message">
             <h2>You're Locked In 🔐</h2>
-            <p>You’re #<b>{waitlistPosition}</b> in line. You trendsetter, you.</p>
+            <p>You’re #<b>{waitlistPosition}</b> in line. You trendsetter!</p>
             <p>We’ll hit you up soon. Until then, keep dodging bad advice and weird hustle gurus.</p>
             <p>Or go back to doomscrolling... no judgment 😉</p>
             </div>
