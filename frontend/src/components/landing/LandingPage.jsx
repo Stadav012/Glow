@@ -43,17 +43,29 @@ export default function LandingPage() {
 
         <div className="features-grid">
         <div className="feature-card">
-            <div className="feature-icon">🎯</div>
+            <div className="feature-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" fill="#2C1810"/>
+              </svg>
+            </div>
             <h3>Smart Prompts (Not Cringe)</h3>
             <p>We turn what you scroll into questions that actually make you think. No therapy voice required.</p>
         </div>
         <div className="feature-card">
-            <div className="feature-icon">🔄</div>
+            <div className="feature-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.17-5.24l-1.42 1.42-3.75-3.75V5h2v6.57l3.17 3.17z" fill="#2C1810"/>
+              </svg>
+            </div>
             <h3>Mentors, Not Motivators</h3>
             <p>People who get it 'cause they lived it. No mics. No monologues. Just facts.</p>
         </div>
         <div className="feature-card">
-            <div className="feature-icon">🌟</div>
+            <div className="feature-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.35.16-2h4.68c.09.65.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z" fill="#2C1810"/>
+              </svg>
+            </div>
             <h3>Flip the Algorithm</h3>
             <p>What you scroll shapes your mindset. Let's twist that energy into something real.</p>
         </div>
@@ -63,7 +75,7 @@ export default function LandingPage() {
         {!isSubmitted ? (
             <>
             <h2>Be the First to Touch Glow</h2>
-            <p>It's not live for everyone yet. But it could be live for *you.*</p>
+            <p>It's not live for everyone yet. But it could be live for you.</p>
             <form onSubmit={handleSubmit} className="email-form">
                 <input
                 type="email"
