@@ -41,13 +41,14 @@ router.post('/', async (req, res) => {
       });
     }
 
-    // Get current count for position
+    // Get current count for position and add artificial demand
     const count = await Waitlist.countDocuments();
+    const artificialDemand = 15;
     
-    // Create new waitlist entry
+    // Create new waitlist entry with position starting from artificial demand
     const waitlistEntry = new Waitlist({
       email,
-      position: count + 1
+      position: count + artificialDemand
     });
 
     await waitlistEntry.save();
