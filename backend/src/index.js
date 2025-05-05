@@ -77,8 +77,7 @@ app.use('/api/auth',       authRoutes.router); // Correct: exports { router, ...
 app.use('/api/reflections', reflectionRoutes); // Route for handling reflection endpoints
 app.use('/api/ai',         aiRoutes);         // Assuming direct export
 app.use('/api/mentor',     mentorRoutes);     // Assuming direct export
-
-
+app.use('/api/waitlist', require('./routes/waitlist')); // Handle waitlist submissions
 
 // Start the server
 startServer();
