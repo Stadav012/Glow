@@ -35,8 +35,8 @@ export default function LandingPage() {
 
         <div className="mission-statement">
         <p className="lead-text">
-            Glow helps you unlearn the internet.  
-            Real people. Real convos. Real perspective.  
+            Made for high schoolers, open to all educators. Glow helps you unlearn the internet.
+            Real people. Real convos. Real perspective.
             Not another app telling you to "rise and grind."
         </p>
         </div>
@@ -75,7 +75,7 @@ export default function LandingPage() {
         {!isSubmitted ? (
             <>
             <h2>Be the First to Touch Glow</h2>
-            <p>It's not live for everyone yet. But it could be live for you.</p>
+            <p>Whether you're a high school student looking to level up or an educator wanting to explore, join us in reshaping how we learn from social media.</p>
             <form onSubmit={handleSubmit} className="email-form">
                 <input
                 type="email"
