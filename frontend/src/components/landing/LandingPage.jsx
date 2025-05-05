@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './LandingPage.css';
+import targetIcon from '../../assets/icons/target.svg';
+import brainIcon from '../../assets/icons/brain.svg';
+import phoneIcon from '../../assets/icons/phone.svg';
 
 export default function LandingPage() {
   const [email, setEmail] = useState('');
@@ -36,26 +39,26 @@ export default function LandingPage() {
         <div className="mission-statement">
         <p className="lead-text">
             Made for high schoolers, open to curious educators.  
-            Glow helps you rethink what success actually looks like—using your feed, your voice, and people who actually get it.  
+            Glow helps you rethink what success actually looks like, using your feed, your voice, and people who actually get it.  
             Not another adult yelling "stay in school." Chill.
         </p>
         </div>
 
         <div className="features-grid">
         <div className="feature-card">
-            <div className="feature-icon">🎯</div>
+            <div className="feature-icon"><img src={targetIcon} alt="Target icon" /></div>
             <h3>Smart Prompts (Not Cringe)</h3>
             <p>We flip your feed into convo starters that actually hit. No wellness quotes. No deep sighing.</p>
         </div>
         <div className="feature-card">
-            <div className="feature-icon">🧠</div>
+            <div className="feature-icon"><img src={brainIcon} alt="Brain icon" /></div>
             <h3>Mentors Who’ve Been There</h3>
             <p>Not influencers. Not guidance counselors. Real people who made it out the same maze you're in.</p>
         </div>
         <div className="feature-card">
-            <div className="feature-icon">📲</div>
+            <div className="feature-icon"><img src={phoneIcon} alt="Phone icon" /></div>
             <h3>Flip the Algorithm</h3>
-            <p>Your scroll shapes your brain. We help you hijack it back—before it turns into hustle-hype soup.</p>
+            <p>Your scroll shapes your brain. We help you hijack it back, before it turns into hustle-hype soup.</p>
         </div>
         </div>
 
@@ -63,7 +66,7 @@ export default function LandingPage() {
         {!isSubmitted ? (
             <>
             <h2>Glow Is Kinda Like AirDrop for Ambition</h2>
-            <p>These are the convos that change your direction. Not gonna lie—this is the stuff no one teaches in class.</p>
+            <p>These are the convos that change your direction. Not gonna lie, this is the stuff no one teaches in class.</p>
             <form onSubmit={handleSubmit} className="email-form">
                 <input
                 type="email"
